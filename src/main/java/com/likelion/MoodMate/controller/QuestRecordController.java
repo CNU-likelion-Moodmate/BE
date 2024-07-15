@@ -12,8 +12,12 @@ import java.util.Optional;
 @RequestMapping("/questRecords")
 public class QuestRecordController {
 
+    private final QuestRecordService questRecordService;
+
     @Autowired
-    private QuestRecordService questRecordService;
+    public QuestRecordController(QuestRecordService questRecordService) {
+        this.questRecordService = questRecordService;
+    }
 
     @PostMapping
     public ResponseEntity<QuestRecord> createQuestRecord(@RequestBody QuestRecord questRecord) {

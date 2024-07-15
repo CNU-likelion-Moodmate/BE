@@ -10,8 +10,12 @@ import java.util.Optional;
 @Service
 public class QuestRecordService {
 
+    private final QuestRecordRepository questRecordRepository;
+
     @Autowired
-    private QuestRecordRepository questRecordRepository;
+    public QuestRecordService(QuestRecordRepository questRecordRepository) {
+        this.questRecordRepository = questRecordRepository;
+    }
 
     public QuestRecord createQuestRecord(QuestRecord questRecord) {
         return questRecordRepository.save(questRecord);
