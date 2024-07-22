@@ -45,4 +45,9 @@ public class UserService {
             return false;
         }
     }
+
+    public boolean validateUser(String userId, String userPw) {
+        User user = userRepository.findByUserIdAndUserPassword(userId, userPw);
+        return user != null;
+    }
 }
