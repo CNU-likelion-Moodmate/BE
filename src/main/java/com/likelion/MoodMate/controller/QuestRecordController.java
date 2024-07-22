@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,5 +46,14 @@ public class QuestRecordController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/loadQuest")
+    public ResponseEntity<List<QuestRecord>> loadQuest(@RequestParam String userId) {
+        List<QuestRecord> questRecords = questRecordService.findByUserId(userId);
+        if (questRecords.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(questRecords);
     }
 }

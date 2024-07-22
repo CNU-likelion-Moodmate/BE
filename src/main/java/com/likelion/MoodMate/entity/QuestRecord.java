@@ -1,5 +1,6 @@
 package com.likelion.MoodMate.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class QuestRecord {
     @Column(nullable = false)
     private Boolean isCompleted;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @Column(nullable = false)
     private Date allocatedDate;
 
