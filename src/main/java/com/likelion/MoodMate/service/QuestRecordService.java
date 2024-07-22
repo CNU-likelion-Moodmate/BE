@@ -5,6 +5,7 @@ import com.likelion.MoodMate.repository.QuestRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,5 +48,9 @@ public class QuestRecordService {
         } else {
             return false;
         }
+    }
+
+    public List<QuestRecord> findByUserId(String userId) {
+        return questRecordRepository.findByUser_UserId(userId);
     }
 }
