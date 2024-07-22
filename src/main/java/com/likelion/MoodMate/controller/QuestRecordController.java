@@ -1,5 +1,6 @@
 package com.likelion.MoodMate.controller;
 
+import com.likelion.MoodMate.dto.CompleteQuestRequest;
 import com.likelion.MoodMate.entity.QuestRecord;
 import com.likelion.MoodMate.service.QuestRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,15 @@ public class QuestRecordController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(questRecords);
+    }
+
+    @PostMapping("/completeQuest")
+    public ResponseEntity<Void> completeQuest(@RequestBody CompleteQuestRequest request) {
+        boolean isUpdated = questRecordService.completeQuest(request.getUserId(), request.getContents(), request.getDate(), request.getRating());
+        if (isUpdated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
