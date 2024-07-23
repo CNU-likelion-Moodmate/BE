@@ -1,5 +1,6 @@
 package com.likelion.MoodMate.controller;
 
+import com.likelion.MoodMate.dto.signUpDTO;
 import com.likelion.MoodMate.entity.User;
 import com.likelion.MoodMate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -44,6 +44,20 @@ public class UserController {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<Void> signUp(@RequestBody signUpDTO userDTO) {
+        User user = new User();
+        user.setUserId(userDTO.getUserId());
+        user.setUserPassword(userDTO.getUserPw());
+        user.setUserName(userDTO.getUserName());
+        try {
+            userService.signUp(user);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(409).build();
         }
     }
 }
