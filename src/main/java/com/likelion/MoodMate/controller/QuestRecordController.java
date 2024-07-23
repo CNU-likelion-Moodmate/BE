@@ -1,5 +1,6 @@
 package com.likelion.MoodMate.controller;
 
+import com.likelion.MoodMate.dto.DeleteQuestRequest;
 import com.likelion.MoodMate.dto.CompleteQuestRequest;
 import com.likelion.MoodMate.entity.QuestRecord;
 import com.likelion.MoodMate.service.QuestRecordService;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/questRecords")
 public class QuestRecordController {
 
     private final QuestRecordService questRecordService;
@@ -57,6 +57,12 @@ public class QuestRecordController {
         }
         return ResponseEntity.ok(questRecords);
     }
+
+
+    @DeleteMapping("/deleteQuest")
+    public ResponseEntity<Void> deleteQuest(@RequestBody DeleteQuestRequest request) {
+        boolean isDeleted = questRecordService.deleteQuestRecord(request.getUserId(), request.getContents(), request.getDate());
+        if (isDeleted) {
 
     @PostMapping("/completeQuest")
     public ResponseEntity<Void> completeQuest(@RequestBody CompleteQuestRequest request) {

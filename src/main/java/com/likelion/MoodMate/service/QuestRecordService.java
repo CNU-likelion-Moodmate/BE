@@ -53,6 +53,16 @@ public class QuestRecordService {
         }
     }
 
+    public boolean deleteQuestRecord(String userId, String questContext, Date date) {
+        Optional<QuestRecord> questRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, questContext, date);
+        if (questRecord.isPresent()) {
+            questRecordRepository.delete(questRecord.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public List<QuestRecord> findByUserId(String userId) {
         return questRecordRepository.findByUser_UserId(userId);
     }
