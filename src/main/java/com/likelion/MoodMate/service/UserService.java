@@ -50,4 +50,15 @@ public class UserService {
         User user = userRepository.findByUserIdAndUserPassword(userId, userPw);
         return user != null;
     }
+
+    public boolean isUserIdExists(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
+    }
+
+    public User signUp(User user) throws IllegalArgumentException {
+        if (isUserIdExists(user.getUserId())) {
+            throw new IllegalArgumentException("User ID already exists");
+        }
+        return userRepository.save(user);
+    }
 }
