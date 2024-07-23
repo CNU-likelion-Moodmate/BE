@@ -5,6 +5,7 @@ import com.likelion.MoodMate.repository.QuestRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,16 @@ public class QuestRecordService {
     public boolean deleteQuestRecord(Long id) {
         if (questRecordRepository.existsById(id)) {
             questRecordRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean deleteQuestRecord(String userId, String questContext, Date date) {
+        Optional<QuestRecord> questRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, questContext, date);
+        if (questRecord.isPresent()) {
+            questRecordRepository.delete(questRecord.get());
             return true;
         } else {
             return false;
