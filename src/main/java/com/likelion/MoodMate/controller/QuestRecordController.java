@@ -58,11 +58,15 @@ public class QuestRecordController {
         return ResponseEntity.ok(questRecords);
     }
 
-
     @DeleteMapping("/deleteQuest")
     public ResponseEntity<Void> deleteQuest(@RequestBody DeleteQuestRequest request) {
         boolean isDeleted = questRecordService.deleteQuestRecord(request.getUserId(), request.getContents(), request.getDate());
         if (isDeleted) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping("/completeQuest")
     public ResponseEntity<Void> completeQuest(@RequestBody CompleteQuestRequest request) {
