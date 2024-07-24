@@ -48,7 +48,7 @@ public class DeleteQuestRecordTest {
         questDate = dateFormat.parse("2024-07-21");
 
         // 사용자 초기화
-        testUser = userRepository.findByUserId("test01");
+        testUser = userRepository.findByUserId("test01").orElse(null);
         if (testUser == null) {
             testUser = new User();
             testUser.setUserId("test01");
