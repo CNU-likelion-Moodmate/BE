@@ -57,7 +57,7 @@ public class QuestService {
     }
 
     public void saveQuest(String selectedQuest, String userId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findByUserId(userId).orElse(null);
         Quest quest = questRepository.findByQuestContext(selectedQuest)
                 .orElseThrow(() -> new RuntimeException("Quest not found"));
 

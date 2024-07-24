@@ -47,7 +47,6 @@ public class UserService {
     }
 
     public boolean validateUser(String userId, String userPw) {
-        User user = userRepository.findByUserIdAndUserPassword(userId, userPw);
-        return user != null;
+        return userRepository.findByUserIdAndUserPassword(userId, userPw).isPresent();
     }
 }

@@ -46,7 +46,7 @@ public class QuestServiceTest {
         quest.setQuestContext("퀘스트 내용");
         quest.setMood("기분");
 
-        when(userRepository.findByUserId("test01")).thenReturn(user);
+        when(userRepository.findByUserId("test01")).thenReturn(Optional.of(user));
         when(questRepository.findByQuestContext("퀘스트 내용")).thenReturn(Optional.of(quest));
 
         questService.saveQuest("퀘스트 내용", "test01");
@@ -59,7 +59,7 @@ public class QuestServiceTest {
         User user = new User();
         user.setUserId("test01");
 
-        when(userRepository.findByUserId("test01")).thenReturn(user);
+        when(userRepository.findByUserId("test01")).thenReturn(Optional.of(user));
         when(questRepository.findByQuestContext("퀘스트 내용")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> {
