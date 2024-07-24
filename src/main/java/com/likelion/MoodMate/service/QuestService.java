@@ -9,8 +9,8 @@ import com.likelion.MoodMate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestService {
@@ -73,5 +73,19 @@ public class QuestService {
         } else {
             throw new RuntimeException("User not found");
         }
+    }
+
+    public List<String> recommendQuests(String mood1, String mood2, Integer activity) {
+        Random random = new Random();
+        String selectedMood = random.nextBoolean() ? mood1 : mood2;
+        List<Quest> quests = questRepository.findByMoodAndActivityGreaterThanEqual(selectedMood, activity);
+
+        return quests.stream()
+                .map(Quest::getQuestContext)
+                .collect(Collectors.collectingAndThen(Collectors.toList(),
+                        collected -> {
+                            Collections.shuffle(collected);
+                            return collected.stream().limit(3).collect(Collectors.toList());
+                        }));
     }
 }
