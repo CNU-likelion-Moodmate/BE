@@ -48,7 +48,7 @@ public class DeleteQuestRecordTest {
         questDate = dateFormat.parse("2024-07-21");
 
         // 사용자 초기화
-        testUser = userRepository.findByUserId("test01");
+        testUser = userRepository.findByUserId("test01").orElse(null);
         if (testUser == null) {
             testUser = new User();
             testUser.setUserId("test01");
@@ -89,7 +89,7 @@ public class DeleteQuestRecordTest {
     public void testDeleteQuestNotFound() throws Exception {
         deleteQuestRequest.setContents("없는 퀘스트 내용");
 
-        mockMvc.perform(delete("/questRecords/deleteQuest")
+        mockMvc.perform(delete("/deleteQuest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(deleteQuestRequest)))
                 .andExpect(status().isNotFound());
