@@ -89,7 +89,7 @@ public class DeleteQuestRecordTest {
     public void testDeleteQuestNotFound() throws Exception {
         deleteQuestRequest.setContents("없는 퀘스트 내용");
 
-        mockMvc.perform(delete("/questRecords/deleteQuest")
+        mockMvc.perform(delete("/deleteQuest")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(deleteQuestRequest)))
                 .andExpect(status().isNotFound());
