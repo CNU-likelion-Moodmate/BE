@@ -49,4 +49,15 @@ public class UserService {
     public boolean validateUser(String userId, String userPw) {
         return userRepository.findByUserIdAndUserPassword(userId, userPw).isPresent();
     }
+
+    public boolean isUserIdExists(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
+    }
+
+    public void signUp(User user) throws IllegalArgumentException {
+        if (isUserIdExists(user.getUserId())) {
+            throw new IllegalArgumentException("User ID already exists");
+        }
+        userRepository.save(user);
+    }
 }

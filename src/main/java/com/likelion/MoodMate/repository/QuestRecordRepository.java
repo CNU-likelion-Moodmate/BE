@@ -2,7 +2,6 @@ package com.likelion.MoodMate.repository;
 
 import com.likelion.MoodMate.entity.QuestRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Import(RestTemplateConfig.class)
-class ChatServiceIntegrationTest {
+class ChatControllerTest {
 
     @Autowired
     private ChatService chatService;
