@@ -55,10 +55,10 @@ public class UserService {
         return userRepository.findByUserId(userId).isPresent();
     }
 
-    public User signUp(User user) throws IllegalArgumentException {
+    public void signUp(User user) throws IllegalArgumentException {
         if (isUserIdExists(user.getUserId())) {
             throw new IllegalArgumentException("User ID already exists");
         }
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }
