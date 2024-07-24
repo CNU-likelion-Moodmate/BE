@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SaveQuestRequest {
-    private Long questId;    // 선택한 퀘스트의 ID
+    private String selectedQuest;
     private String userId;
 }

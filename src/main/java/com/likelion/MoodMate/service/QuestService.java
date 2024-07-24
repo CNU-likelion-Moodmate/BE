@@ -56,9 +56,10 @@ public class QuestService {
         }
     }
 
-    public void saveQuest(Long questId, String userId) {
+    public void saveQuest(String selectedQuest, String userId) {
         User user = userRepository.findByUserId(userId);
-        Quest quest = questRepository.findById(questId).orElseThrow(() -> new RuntimeException("Quest not found"));
+        Quest quest = questRepository.findByQuestContext(selectedQuest)
+                .orElseThrow(() -> new RuntimeException("Quest not found"));
 
         if (user != null) {
             QuestRecord questRecord = new QuestRecord();
