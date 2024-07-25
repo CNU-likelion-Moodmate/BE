@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface QuestRepository extends JpaRepository<Quest, Long> {
     Optional<Quest> findByQuestContext(String questContext);
-
 }
