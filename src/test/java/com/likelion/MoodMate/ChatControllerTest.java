@@ -8,6 +8,7 @@ import com.likelion.MoodMate.dto.ModelSelectionResponse;
 import com.likelion.MoodMate.service.ChatService;
 import com.likelion.MoodMate.service.FineTuneMessageGenerator;
 import com.likelion.MoodMate.service.OpenAiService;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,59 +36,59 @@ class ChatControllerTest {
     }
 
     @Test
-    void testSelectModel() {
+    void testSelectModel() throws JSONException {
         ModelSelectionRequest request = new ModelSelectionRequest();
-        request.setModel("friendly");
+        request.setSelectedModel("friendly");
 
         ModelSelectionResponse response = chatService.selectModel(request);
 
         assertNotNull(response);
-        System.out.println("Model Selection Response: " + response.getMessage());
+        System.out.println("Model Selection Response: " + response.getResponseChat());
     }
 
     @Test
-    void testSendMessage() {
+    void testSendMessage() throws JSONException {
         // Friendly 모델 선택 및 첫 번째 메시지 보내기
         ModelSelectionRequest modelRequest = new ModelSelectionRequest();
-        modelRequest.setModel("friendly");
+        modelRequest.setSelectedModel("friendly");
         chatService.selectModel(modelRequest);
 
         ChatRequest firstChatRequest = new ChatRequest();
-        firstChatRequest.setMessage("안녕");
+        firstChatRequest.setUserInput("안녕");
         ChatResponse firstChatResponse = chatService.sendMessage(firstChatRequest);
 
         assertNotNull(firstChatResponse);
-        System.out.println("First Chat Response (Friendly): " + firstChatResponse.getResponse());
+        System.out.println("First Chat Response (Friendly): " + firstChatResponse.getResponseChat());
 
         // 두 번째 메시지 보내기
         ChatRequest secondChatRequest = new ChatRequest();
-        secondChatRequest.setMessage("나 요즘 우울해서 힘이 안나.. 어떡해야 할까?");
+        secondChatRequest.setUserInput("나 요즘 우울해서 힘이 안나.. 어떡해야 할까?");
         ChatResponse secondChatResponse = chatService.sendMessage(secondChatRequest);
 
         assertNotNull(secondChatResponse);
-        System.out.println("Second Chat Response (Friendly): " + secondChatResponse.getResponse());
+        System.out.println("Second Chat Response (Friendly): " + secondChatResponse.getResponseChat());
     }
 
     @Test
-    void testSendMessage2() {
+    void testSendMessage2() throws JSONException {
         // Serious 모델 선택 및 첫 번째 메시지 보내기
         ModelSelectionRequest modelRequest = new ModelSelectionRequest();
-        modelRequest.setModel("serious");
+        modelRequest.setSelectedModel("serious");
         chatService.selectModel(modelRequest);
 
         ChatRequest firstChatRequest = new ChatRequest();
-        firstChatRequest.setMessage("안녕");
+        firstChatRequest.setUserInput("안녕");
         ChatResponse firstChatResponse = chatService.sendMessage(firstChatRequest);
 
         assertNotNull(firstChatResponse);
-        System.out.println("First Chat Response (Serious): " + firstChatResponse.getResponse());
+        System.out.println("First Chat Response (Serious): " + firstChatResponse.getResponseChat());
 
         // 두 번째 메시지 보내기
         ChatRequest secondChatRequest = new ChatRequest();
-        secondChatRequest.setMessage("회사에서 실수를 해서 부장님께 혼나고 말았어요.. 어떻게 해야 할까요?");
+        secondChatRequest.setUserInput("회사에서 실수를 해서 부장님께 혼나고 말았어요.. 어떻게 해야 할까요?");
         ChatResponse secondChatResponse = chatService.sendMessage(secondChatRequest);
 
         assertNotNull(secondChatResponse);
-        System.out.println("Second Chat Response (Serious): " + secondChatResponse.getResponse());
+        System.out.println("Second Chat Response (Serious): " + secondChatResponse.getResponseChat());
     }
 }
