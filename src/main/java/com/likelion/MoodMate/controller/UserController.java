@@ -1,6 +1,6 @@
 package com.likelion.MoodMate.controller;
 
-import com.likelion.MoodMate.dto.signUpDTO;
+import com.likelion.MoodMate.dto.SignUpDTO;
 import com.likelion.MoodMate.entity.User;
 import com.likelion.MoodMate.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<Void> signUp(@RequestBody signUpDTO userDTO) {
+    public ResponseEntity<Void> signUp(@RequestBody SignUpDTO userDTO) {
         User user = new User();
         user.setUserId(userDTO.getUserId());
         user.setUserPassword(userDTO.getUserPw());
