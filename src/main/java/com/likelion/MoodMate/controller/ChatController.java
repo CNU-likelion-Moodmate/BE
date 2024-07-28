@@ -5,14 +5,13 @@ import com.likelion.MoodMate.dto.ChatResponse;
 import com.likelion.MoodMate.dto.ModelSelectionRequest;
 import com.likelion.MoodMate.dto.ModelSelectionResponse;
 import com.likelion.MoodMate.service.ChatService;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/chat")
 public class ChatController {
 
     private final ChatService chatService;
@@ -23,12 +22,12 @@ public class ChatController {
     }
 
     @PostMapping("/select-model")
-    public ModelSelectionResponse selectModel(@RequestBody ModelSelectionRequest request) {
+    public ModelSelectionResponse selectModel(@RequestBody ModelSelectionRequest request) throws JSONException {
         return chatService.selectModel(request);
     }
 
-    @PostMapping("/message")
-    public ChatResponse sendMessage(@RequestBody ChatRequest request) {
+    @PostMapping("/chat")
+    public ChatResponse sendMessage(@RequestBody ChatRequest request) throws JSONException {
         return chatService.sendMessage(request);
     }
 }

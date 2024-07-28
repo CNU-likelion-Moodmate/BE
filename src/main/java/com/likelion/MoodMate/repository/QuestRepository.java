@@ -10,5 +10,4 @@ public interface QuestRepository extends JpaRepository<Quest, Long> {
     Optional<Quest> findByQuestContext(String questContext);
     List<Quest> findByMoodAndActivityGreaterThanEqual(String mood, Integer activity);
 
-
 }

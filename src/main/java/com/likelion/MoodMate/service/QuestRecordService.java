@@ -5,8 +5,6 @@ import com.likelion.MoodMate.repository.QuestRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,40 +19,8 @@ public class QuestRecordService {
         this.questRecordRepository = questRecordRepository;
     }
 
-    public QuestRecord createQuestRecord(QuestRecord questRecord) {
-        return questRecordRepository.save(questRecord);
-    }
-
-    public Optional<QuestRecord> getQuestRecord(Long id) {
-        return questRecordRepository.findById(id);
-    }
-
-    public Optional<QuestRecord> updateQuestRecord(Long id, QuestRecord questRecordDetails) {
-        Optional<QuestRecord> optionalQuestRecord = questRecordRepository.findById(id);
-        if (optionalQuestRecord.isPresent()) {
-            QuestRecord questRecord = optionalQuestRecord.get();
-            questRecord.setIsCompleted(questRecordDetails.getIsCompleted());
-            questRecord.setAllocatedDate(questRecordDetails.getAllocatedDate());
-            questRecord.setQuestContext(questRecordDetails.getQuestContext());
-            questRecord.setMood(questRecordDetails.getMood());
-            questRecord.setRate(questRecordDetails.getRate());
-            return Optional.of(questRecordRepository.save(questRecord));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public boolean deleteQuestRecord(Long id) {
-        if (questRecordRepository.existsById(id)) {
-            questRecordRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean deleteQuestRecord(String userId, String questContext, Date date) {
-        Optional<QuestRecord> questRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, questContext, date);
+    public boolean deleteQuestRecord(String userId, String contents, Date date) {
+        Optional<QuestRecord> questRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, contents, date);
         if (questRecord.isPresent()) {
             questRecordRepository.delete(questRecord.get());
             return true;
@@ -67,16 +33,7 @@ public class QuestRecordService {
         return questRecordRepository.findByUser_UserId(userId);
     }
 
-    public boolean completeQuest(String userId, String contents, String dateStr, int rating) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date;
-        try {
-            date = dateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return false;
-        }
-
+    public boolean completeQuest(String userId, String contents, Date date, int rating) {
         Optional<QuestRecord> optionalQuestRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, contents, date);
         if (optionalQuestRecord.isPresent()) {
             QuestRecord questRecord = optionalQuestRecord.get();
