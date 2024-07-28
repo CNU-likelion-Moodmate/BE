@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CORS Test</title>
+    <script>
+        async function testCors() {
+            try {
+                const response = await fetch('http://localhost:8080/test', {
+                    method: 'GET',
+                    credentials: 'include' // 자격 증명 포함
+                });
+                const data = await response.text();
+                document.getElementById('result').innerText = data;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'CORS error';
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>CORS Test</h1>
+<button onclick="testCors()">Test CORS</button>
+<p id="result"></p>
+</body>
+</html>

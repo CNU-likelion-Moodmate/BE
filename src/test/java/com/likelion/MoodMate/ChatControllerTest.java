@@ -54,7 +54,7 @@ class ChatControllerTest {
         chatService.selectModel(modelRequest);
 
         ChatRequest firstChatRequest = new ChatRequest();
-        firstChatRequest.setUserInput("안녕");
+        firstChatRequest.setUserInput("나 요즘 우울해서 힘이 안나..");
         ChatResponse firstChatResponse = chatService.sendMessage(firstChatRequest);
 
         assertNotNull(firstChatResponse);
@@ -62,7 +62,7 @@ class ChatControllerTest {
 
         // 두 번째 메시지 보내기
         ChatRequest secondChatRequest = new ChatRequest();
-        secondChatRequest.setUserInput("나 요즘 우울해서 힘이 안나.. 어떡해야 할까?");
+        secondChatRequest.setUserInput("하는 일도 잘 안돼구.. 답답하고 힘들어");
         ChatResponse secondChatResponse = chatService.sendMessage(secondChatRequest);
 
         assertNotNull(secondChatResponse);
@@ -77,7 +77,7 @@ class ChatControllerTest {
         chatService.selectModel(modelRequest);
 
         ChatRequest firstChatRequest = new ChatRequest();
-        firstChatRequest.setUserInput("안녕");
+        firstChatRequest.setUserInput("오해가 생겨 친구와 크게 싸우고 말았어요..");
         ChatResponse firstChatResponse = chatService.sendMessage(firstChatRequest);
 
         assertNotNull(firstChatResponse);
@@ -85,7 +85,7 @@ class ChatControllerTest {
 
         // 두 번째 메시지 보내기
         ChatRequest secondChatRequest = new ChatRequest();
-        secondChatRequest.setUserInput("회사에서 실수를 해서 부장님께 혼나고 말았어요.. 어떻게 해야 할까요?");
+        secondChatRequest.setUserInput("친구가 저에 대해 험담을 했다고 들어서 크게 화를 냈는데 사실 그게 아니었어요..");
         ChatResponse secondChatResponse = chatService.sendMessage(secondChatRequest);
 
         assertNotNull(secondChatResponse);
