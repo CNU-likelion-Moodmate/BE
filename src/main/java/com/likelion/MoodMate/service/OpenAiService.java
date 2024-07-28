@@ -18,7 +18,9 @@ public class OpenAiService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${openai.api.key}")
+    @Value("${spring.ai.openai.base-url}")
+    private String apiUrl;
+    @Value("${spring.ai.openai.api-key}")
     private String apiKey;
 
     public OpenAiService(RestTemplate restTemplate) {
@@ -26,7 +28,7 @@ public class OpenAiService {
     }
 
     public String getOpenAiResponse(String prompt) {
-        String url = "https://api.openai.com/v1/chat/completions";
+        String url = apiUrl;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + apiKey);
