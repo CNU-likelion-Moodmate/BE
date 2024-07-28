@@ -4,19 +4,17 @@ import com.likelion.MoodMate.dto.ChatRequest;
 import com.likelion.MoodMate.dto.ChatResponse;
 import com.likelion.MoodMate.dto.ModelSelectionRequest;
 import com.likelion.MoodMate.dto.ModelSelectionResponse;
+import com.likelion.MoodMate.dto.ConversationHistory;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.json.JSONObject;
 
 @Service
 public class ChatService {
 
     private final OpenAiService openAiService;
     private final FineTuneMessageGenerator fineTuneMessageGenerator;
-
-    private String currentModel;
-    private String currentFineTuneMessage;
 
     @Autowired
     public ChatService(OpenAiService openAiService, FineTuneMessageGenerator fineTuneMessageGenerator) {
@@ -25,9 +23,9 @@ public class ChatService {
     }
 
     public ModelSelectionResponse selectModel(ModelSelectionRequest request) throws JSONException {
-        this.currentModel = request.getSelectedModel();
-        this.currentFineTuneMessage = fineTuneMessageGenerator.generateMessage(request.getSelectedModel());
-        String initialResponse = openAiService.getOpenAiResponse(this.currentFineTuneMessage);
+        String selectedModel = request.getSelectedModel();
+        String fineTuneMessage = fineTuneMessageGenerator.generateMessage(selectedModel);
+        String initialResponse = openAiService.getOpenAiResponse(fineTuneMessage);
         String responseMessage = extractMessageFromResponse(initialResponse);
 
         ModelSelectionResponse response = new ModelSelectionResponse();
@@ -35,19 +33,17 @@ public class ChatService {
         return response;
     }
 
-    public ChatResponse sendMessage(ChatRequest request) throws JSONException {
-        if (currentModel == null || currentFineTuneMessage == null) {
-            throw new IllegalStateException("Model not selected");
-        }
-
+    public ChatResponse sendMessage(ChatRequest request, String fineTuneMessage, ConversationHistory conversationHistory) throws JSONException {
         String userMessage = request.getUserInput();
-        String prompt = this.currentFineTuneMessage + "\n" + userMessage;
+        conversationHistory.appendUserMessage(userMessage);
+
+        String prompt = fineTuneMessage + "\n" + conversationHistory.getHistory();
         String openAiResponse = openAiService.getOpenAiResponse(prompt);
         String responseMessage = extractMessageFromResponse(openAiResponse);
 
-        ChatResponse response = new ChatResponse();
-        response.setResponseChat(responseMessage);
-        return response;
+        conversationHistory.appendAiMessage(responseMessage);
+
+        return new ChatResponse(responseMessage);
     }
 
     private String extractMessageFromResponse(String jsonResponse) throws JSONException {
