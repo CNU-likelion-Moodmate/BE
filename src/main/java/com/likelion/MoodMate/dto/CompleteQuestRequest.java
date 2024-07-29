@@ -13,5 +13,5 @@ public class CompleteQuestRequest {
     private String contents;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
-    private int rating;
+    private int rate;
 }
