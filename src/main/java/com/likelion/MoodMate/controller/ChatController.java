@@ -46,10 +46,24 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public ChatResponse sendMessage(@RequestBody ChatRequest request, @SessionAttribute("fineTuneMessage") String fineTuneMessage, @SessionAttribute("conversationHistory") ConversationHistory conversationHistory, HttpSession session) throws JSONException {
+    public ChatResponse sendMessage(
+            @RequestBody ChatRequest request,
+            @SessionAttribute(name = "fineTuneMessage", required = false) String fineTuneMessage,
+            @SessionAttribute(name = "conversationHistory", required = false) ConversationHistory conversationHistory,
+            HttpSession session) throws JSONException {
+
+        if (fineTuneMessage == null) {
+            fineTuneMessage = fineTuneMessageGenerator.generateMessage("friendly");
+            session.setAttribute("fineTuneMessage", fineTuneMessage);
+            conversationHistory = new ConversationHistory(fineTuneMessage);
+            session.setAttribute("conversationHistory", conversationHistory);
+        }
+
         ChatResponse response = chatService.sendMessage(request, fineTuneMessage, conversationHistory);
         session.setAttribute("conversationHistory", conversationHistory);
+
         logger.info("Session fineTuneMessage: {}, conversationHistory: {}", fineTuneMessage, conversationHistory.getHistory());
         return response;
     }
+
 }

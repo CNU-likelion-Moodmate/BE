@@ -33,7 +33,11 @@ public class QuestRecordController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         List<QuestRecordResponse> response = questRecords.stream()
-                .map(record -> new QuestRecordResponse(record.getQuestContext(), dateFormat.format(record.getAllocatedDate())))
+                .map(record -> new QuestRecordResponse(
+                        record.getId(),
+                        record.getQuestContext(),
+                        dateFormat.format(record.getAllocatedDate()),
+                        record.getRate()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
@@ -41,7 +45,7 @@ public class QuestRecordController {
 
     @DeleteMapping("/deleteQuest")
     public ResponseEntity<Void> deleteQuest(@RequestBody DeleteQuestRequest request) {
-        boolean isDeleted = questRecordService.deleteQuestRecord(request.getUserId(), request.getContents(), request.getDate());
+        boolean isDeleted = questRecordService.deleteQuestRecord(request.getQuestRecordId());
         if (isDeleted) {
             return ResponseEntity.ok().build();
         } else {
@@ -51,11 +55,12 @@ public class QuestRecordController {
 
     @PostMapping("/completeQuest")
     public ResponseEntity<Void> completeQuest(@RequestBody CompleteQuestRequest request) {
-        boolean isUpdated = questRecordService.completeQuest(request.getUserId(), request.getContents(), request.getDate(), request.getRate());
+        boolean isUpdated = questRecordService.completeQuest(request.getQuestRecordId(), request.getRate());
         if (isUpdated) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

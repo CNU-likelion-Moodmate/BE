@@ -22,9 +22,8 @@ public class QuestRecordService {
         this.questRecordRepository = questRecordRepository;
     }
 
-    public boolean deleteQuestRecord(String userId, String contents, Date date) {
-        String formattedDate = dateFormat.format(date);
-        Optional<QuestRecord> questRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, contents, formattedDate);
+    public boolean deleteQuestRecord(Long questRecordId) {
+        Optional<QuestRecord> questRecord = questRecordRepository.findById(questRecordId);
         if (questRecord.isPresent()) {
             questRecordRepository.delete(questRecord.get());
             return true;
@@ -37,9 +36,8 @@ public class QuestRecordService {
         return questRecordRepository.findByUser_UserId(userId);
     }
 
-    public boolean completeQuest(String userId, String contents, Date date, int rate) {
-        String formattedDate = dateFormat.format(date);
-        Optional<QuestRecord> optionalQuestRecord = questRecordRepository.findByUser_UserIdAndQuestContextAndAllocatedDate(userId, contents, formattedDate);
+    public boolean completeQuest(Long questRecordId, int rate) {
+        Optional<QuestRecord> optionalQuestRecord = questRecordRepository.findById(questRecordId);
         if (optionalQuestRecord.isPresent()) {
             QuestRecord questRecord = optionalQuestRecord.get();
             questRecord.setIsCompleted(true);
