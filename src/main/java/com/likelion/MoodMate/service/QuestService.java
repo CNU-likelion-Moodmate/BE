@@ -48,7 +48,9 @@ public class QuestService {
     public List<String> recommendQuests(String mood1, String mood2, Integer activity) {
         Random random = new Random();
         String selectedMood = random.nextBoolean() ? mood1 : mood2;
-        List<Quest> quests = questRepository.findByMoodAndActivityGreaterThanEqual(selectedMood, activity);
+        int minActivity = activity - 20;
+        int maxActivity = activity + 20;
+        List<Quest> quests = questRepository.findByMoodAndActivityBetween(selectedMood, minActivity, maxActivity);
 
         return quests.stream()
                 .map(Quest::getQuestContext)

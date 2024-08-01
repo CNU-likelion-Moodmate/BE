@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface QuestRepository extends JpaRepository<Quest, Long> {
     Optional<Quest> findByQuestContext(String questContext);
-    List<Quest> findByMoodAndActivityGreaterThanEqual(String mood, Integer activity);
+    List<Quest> findByMoodAndActivityBetween(String mood, Integer minActivity, Integer maxActivity);
 
 }
