@@ -26,20 +26,23 @@ public class QuestService {
         this.questRecordRepository = questRecordRepository;
     }
 
-    public void saveQuest(String selectedQuest, String userId) {
+    public void saveQuest(List<String> selectedQuests, String userId) {
         User user = userRepository.findByUserId(userId).orElse(null);
-        Quest quest = questRepository.findByQuestContext(selectedQuest)
-                .orElseThrow(() -> new RuntimeException("Quest not found"));
 
         if (user != null) {
-            QuestRecord questRecord = new QuestRecord();
-            questRecord.setUser(user);
-            questRecord.setQuestContext(quest.getQuestContext());
-            questRecord.setMood(quest.getMood());
-            questRecord.setAllocatedDate(new Date());
-            questRecord.setIsCompleted(false);
-            questRecord.setRate(0); // 기본값
-            questRecordRepository.save(questRecord);
+            for (String selectedQuest : selectedQuests) {
+                Quest quest = questRepository.findByQuestContext(selectedQuest)
+                        .orElseThrow(() -> new RuntimeException("Quest not found"));
+
+                QuestRecord questRecord = new QuestRecord();
+                questRecord.setUser(user);
+                questRecord.setQuestContext(quest.getQuestContext());
+                questRecord.setMood(quest.getMood());
+                questRecord.setAllocatedDate(new Date());
+                questRecord.setIsCompleted(false);
+                questRecord.setRate(0); //기본값
+                questRecordRepository.save(questRecord);
+            }
         } else {
             throw new RuntimeException("User not found");
         }

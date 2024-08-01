@@ -21,7 +21,7 @@ public class SaveQuestController {
     @PostMapping
     public ResponseEntity<Void> saveQuest(@RequestBody SaveQuestRequest saveQuestRequest) {
         try {
-            questService.saveQuest(saveQuestRequest.getSelectedQuest(), saveQuestRequest.getUserId());
+            questService.saveQuest(saveQuestRequest.getSelectedQuests(), saveQuestRequest.getUserId());
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
