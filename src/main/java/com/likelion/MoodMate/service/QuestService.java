@@ -53,6 +53,8 @@ public class QuestService {
         String selectedMood = random.nextBoolean() ? mood1 : mood2;
         int minActivity = activity - 20;
         int maxActivity = activity + 20;
+        if (minActivity < 0) { minActivity = 0; }
+        if (maxActivity > 100) { maxActivity = 100; }
         List<Quest> quests = questRepository.findByMoodAndActivityBetween(selectedMood, minActivity, maxActivity);
 
         return quests.stream()
