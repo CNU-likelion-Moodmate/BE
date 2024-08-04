@@ -7,21 +7,17 @@ import com.likelion.MoodMate.dto.ModelSelectionResponse;
 import com.likelion.MoodMate.service.ChatService;
 import com.likelion.MoodMate.service.FineTuneMessageGenerator;
 import com.likelion.MoodMate.dto.ConversationHistory;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
-import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
-@SessionAttributes({"fineTuneMessage", "conversationHistory"})
 public class ChatController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
@@ -36,23 +32,41 @@ public class ChatController {
     }
 
     @PostMapping("/select-model")
-    public ModelSelectionResponse selectModel(@RequestBody ModelSelectionRequest request, Model model, HttpSession session) throws JSONException {
-        ModelSelectionResponse response = chatService.selectModel(request);
-        String fineTuneMessage = fineTuneMessageGenerator.generateMessage(request.getSelectedModel());
+    public ModelSelectionResponse selectModel(@RequestBody ModelSelectionRequest request, HttpServletRequest httpServletRequest) throws JSONException {
+        HttpSession session = httpServletRequest.getSession();
+        String selectedModel = request.getSelectedModel();
+        logger.info("Requested model selection: {}", selectedModel);
+
+        session.invalidate();
+        session = httpServletRequest.getSession(true);
+        logger.info("Session invalidated and new session created.");
+
+        String fineTuneMessage = fineTuneMessageGenerator.generateMessage(selectedModel);
+        logger.info("Generated fineTuneMessage: {}", fineTuneMessage);
+
+        ConversationHistory newConversationHistory = new ConversationHistory(fineTuneMessage);
+        logger.info("Initialized new ConversationHistory.");
+
         session.setAttribute("fineTuneMessage", fineTuneMessage);
-        session.setAttribute("conversationHistory", new ConversationHistory(fineTuneMessage));
-        logger.info("Model selected: {}, session updated with fineTuneMessage and conversationHistory.", request.getSelectedModel());
+        session.setAttribute("conversationHistory", newConversationHistory);
+        session.setAttribute("selectedModel", selectedModel);
+        logger.info("Session attributes set: fineTuneMessage, conversationHistory, selectedModel.");
+
+        ModelSelectionResponse response = chatService.selectModel(request);
+        logger.info("Model selected: {}, session updated.", selectedModel);
+
         return response;
     }
 
     @PostMapping("/chat")
     public ChatResponse sendMessage(
             @RequestBody ChatRequest request,
-            @SessionAttribute(name = "fineTuneMessage", required = false) String fineTuneMessage,
-            @SessionAttribute(name = "conversationHistory", required = false) ConversationHistory conversationHistory,
             HttpSession session) throws JSONException {
 
-        if (fineTuneMessage == null) {
+        String fineTuneMessage = (String) session.getAttribute("fineTuneMessage");
+        ConversationHistory conversationHistory = (ConversationHistory) session.getAttribute("conversationHistory");
+
+        if (fineTuneMessage == null || conversationHistory == null) {
             fineTuneMessage = fineTuneMessageGenerator.generateMessage("friendly");
             session.setAttribute("fineTuneMessage", fineTuneMessage);
             conversationHistory = new ConversationHistory(fineTuneMessage);
@@ -65,5 +79,4 @@ public class ChatController {
         logger.info("Session fineTuneMessage: {}, conversationHistory: {}", fineTuneMessage, conversationHistory.getHistory());
         return response;
     }
-
 }
