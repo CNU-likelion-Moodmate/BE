@@ -50,7 +50,17 @@ public class QuestService {
 
     public List<String> recommendQuests(String mood1, String mood2, Integer activity) {
         Random random = new Random();
-        String selectedMood = random.nextBoolean() ? mood1 : mood2;
+        String selectedMood;
+
+        if (mood2 == null) {
+            selectedMood = mood1;
+        } else if (mood1 == null) {
+            selectedMood = mood2;
+        } else {
+            selectedMood = random.nextBoolean() ? mood1 : mood2;
+        }
+
+
         int minActivity = activity - 20;
         int maxActivity = activity + 20;
         if (minActivity < 0) { minActivity = 0; }
