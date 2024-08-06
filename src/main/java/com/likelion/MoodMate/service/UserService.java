@@ -5,6 +5,7 @@ import com.likelion.MoodMate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 @Service
 public class UserService {
 
@@ -15,8 +16,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean validateUser(String userId, String userPw) {
-        return userRepository.findByUserIdAndUserPassword(userId, userPw).isPresent();
+    public Optional<User> validateUser(String userId, String userPw) {
+        return userRepository.findByUserIdAndUserPassword(userId, userPw);
     }
 
     public boolean isUserIdExists(String userId) {
